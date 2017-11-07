@@ -6,9 +6,23 @@
  */
 
 require('./bootstrap');
+require('animate.css');
 
 window.Vue = require('vue');
+const $=require('jquery');
 
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+if($(".alert").length>0){
+    $(".alert").addClass("fadeInDown");
+    setTimeout(function(){
+        $(".alert").addClass("fadeOutDown");
+    },2000);
+}
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

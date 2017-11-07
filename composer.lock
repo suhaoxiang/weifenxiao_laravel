@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "96098e473b028cdb2529580554a1ae3e",
+    "content-hash": "18e633cee7a651b4e8779dda5bc261ad",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -147,6 +147,57 @@
                 "parser"
             ],
             "time": "2017-05-14T14:47:48+00:00"
+        },
+        {
+            "name": "germey/geetest",
+            "version": "v3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Germey/LaravelGeetest.git",
+                "reference": "b63d66bbd41145a59dc85b256944c3725658286f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/Germey/LaravelGeetest/b63d66bbd41145a59dc85b256944c3725658286f.zip",
+                "reference": "b63d66bbd41145a59dc85b256944c3725658286f",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "5.*",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "dev-master",
+                "phpunit/phpunit": "~4.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Germey\\Geetest\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Germey",
+                    "email": "cqc@cuiqingcai.com"
+                }
+            ],
+            "description": "Geetest Package for Laravel5",
+            "keywords": [
+                "Germey",
+                "geetest",
+                "laravel"
+            ],
+            "time": "2017-09-04T07:47:02+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",
