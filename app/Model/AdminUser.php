@@ -2,13 +2,12 @@
 
 namespace App\Model;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User;
-
+use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 class AdminUser extends User
 {
-    use Notifiable;
+    use EntrustUserTrait;
     protected $table='admin_users';
 
     protected $guarded = ['geetest_challenge', 'geetest_validate', 'geetest_seccode'];

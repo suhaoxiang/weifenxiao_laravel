@@ -177,7 +177,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Germey\Geetest\GeetestServiceProvider::class,
-        \App\Providers\MenuSericeProvider::class
+        Zizaco\Entrust\EntrustServiceProvider::class,
+
+        \Suhaoxiang\Adminmenu\AdminmenuServiceProvider::class,
     ],
 
     /*
@@ -226,7 +228,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Geetest' => Germey\Geetest\Geetest::class
+        'Geetest' => Germey\Geetest\Geetest::class,
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+
+        'Adminmenu'=>\Suhaoxiang\Adminmenu\Facades\Adminmenu::class,
     ],
 
 ];

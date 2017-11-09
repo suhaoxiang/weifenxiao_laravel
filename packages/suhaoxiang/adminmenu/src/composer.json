@@ -1,0 +1,11 @@
+{
+    "name": "qiandutianxia/adminmenu",
+    "description":"后台菜单基于Entrust权限管理，后台采用requirejs方式引入一些插件",
+    "authors": [
+        {
+            "name": "haoxiaing",
+            "email": "haoxiaing@email.com"
+        }
+    ],
+    "require": {}
+}
