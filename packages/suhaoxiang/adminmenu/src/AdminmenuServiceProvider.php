@@ -22,7 +22,9 @@ class AdminmenuServiceProvider extends ServiceProvider
             __DIR__.'/Views/siderbar.blade.php'=>resource_path('views/vendor/menu/layout/siderbar.blade.php'),
             __DIR__.'/Views/menu.blade.php'=>resource_path('views/vendor/menu/layout/menu.blade.php'),
             __DIR__.'/Views/main.blade.php'=>resource_path('views/vendor/menu/main.blade.php'),
-            __DIR__.'/assets/css/menu.css'=>public_path('css/menu.css')
+            __DIR__.'/assets/css/menu.css'=>public_path('css/menu.css'),
+            __DIR__.'/assets/js/require.js'=>public_path('lib/require.js'),
+            __DIR__.'/assets/js/main.js'=>public_path('lib/main.js'),
 
         ]);
 

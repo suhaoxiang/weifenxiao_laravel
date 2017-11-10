@@ -29,7 +29,7 @@ class ShopController extends BaseController
     }
 
     public function index(){
-        Adminmenu::index();
+
 
         return view('admin.shop.index');
     }

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminUserRequest extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,20 +22,26 @@ class AdminUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      * @return array
-     */
      *
+     */
     public function rules()
     {
         return [
-            'geetest_challenge' => 'required|geetest'
+            'name'=>'required',
+            'username'=>'required',
+            'password'=>'required|confirmed',
+            'password_confirmation'=>'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'geetest_challenge.required'=>'请输入验证码',
-            'geetest_challenge.geetest' => config('geetest.server_fail_alert')
+            'name.required'=>'名称不能为空',
+            'username.required'=>'账号不能为空',
+            'password.required'=>'密码不能为空',
+            'password.confirmed'=>'密码不一致',
+            'password_confirmation.required'=>'确认密码不能为空',
         ];
     }
 }
