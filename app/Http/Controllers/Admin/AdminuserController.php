@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AdminUserRequest;
 use App\Model\AdminUser;
+use App\Model\Role;
 use Illuminate\Http\Request;
 
 class AdminuserController extends BaseController
@@ -36,9 +37,19 @@ class AdminuserController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,AdminUser $user)
     {
+        p($request->all());
+        $user->create([
+            "name"=>$request->input("name"),
+            "username"=>$request->input("username"),
+            "password"=>bcrypt($request->input("password"))
+        ]);
 
+//        $user->roles()->create(new Role([
+//            'role_id'=>$request->input('role_id')
+//        ]));
+        redirect("/adminuser")->withSuccess('添加成功！');
     }
 
     /**
@@ -72,14 +83,7 @@ class AdminuserController extends BaseController
      */
     public function update(AdminUserRequest $request, $id)
     {
-        p($request->all());
-        $userOj=new AdminUser();
-        $userOj->save([
-            "name"=>$request->input("name"),
-            "username"=>$request->input("username"),
-            "passowrd"=>bcrypt($request->input("password"))
-        ]);
-        redirect("/adminuser")->withSuccess('添加成功！');
+//        p($request->all());
     }
 
     /**

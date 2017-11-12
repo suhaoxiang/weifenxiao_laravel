@@ -18,7 +18,7 @@ class AdminUser extends User
      * @var array
      */
     protected $fillable = [
-        'username','password',
+        'username','password','name'
     ];
 
     /**
@@ -30,4 +30,8 @@ class AdminUser extends User
         'password', 'remember_token',
     ];
 
+    public function roles()
+    {
+        return $this->belongsToMany('App\Model\Role','role_user','id','role_id');
+    }
 }

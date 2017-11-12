@@ -31,6 +31,7 @@ class AdminUserRequest extends FormRequest
             'username'=>'required',
             'password'=>'required|confirmed',
             'password_confirmation'=>'required',
+            'role_id'=>'required'
         ];
     }
 
@@ -40,6 +41,7 @@ class AdminUserRequest extends FormRequest
             'name.required'=>'名称不能为空',
             'username.required'=>'账号不能为空',
             'password.required'=>'密码不能为空',
+            'role_id.required'=>'请选择角色',
             'password.confirmed'=>'密码不一致',
             'password_confirmation.required'=>'确认密码不能为空',
         ];

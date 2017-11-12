@@ -8,8 +8,7 @@
 <h1 class="content-right-title">添加管理员</h1>
 
 <div class="sysPanel">
-    <form action="" method="POST" id="form1">
-        <input type="hidden" name="_method" value="PUT">
+    <form action="/adminuser" method="POST" id="form1">
         {{ csrf_field() }}
         <div class="formitems">
             <label class="fi-name"><span class="colorRed">*</span>管理姓名：</label>
@@ -45,8 +44,8 @@
             <div class="form-controls">
                 <select name="role_id" class="select">
                     <option value="0" selected="">--请选择--</option>
-                    <option value="4004210">全部功能</option>
-                    <option value="4004248">供应商</option>
+                    <option value="1">全部功能</option>
+                    <option value="2">供应商</option>
                 </select>
                 <span class="fi-help-text"></span>
             </div>

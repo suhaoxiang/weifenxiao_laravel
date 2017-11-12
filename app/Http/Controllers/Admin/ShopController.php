@@ -28,8 +28,8 @@ class ShopController extends BaseController
         }
     }
 
-    public function index(){
-
+    public function index()
+    {
 
         return view('admin.shop.index');
     }
