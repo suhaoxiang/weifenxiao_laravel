@@ -5,26 +5,26 @@
 @endsection
 
 @section('main')
-<h1 class="content-right-title">管理及权限-添加权限角色</h1>
+<h1 class="content-right-title">管理及权限-编辑权限角色</h1>
 
 
-<form method="POST" action="/role" name="add_role_form" id="add_role_form">
+<form method="POST" action="/role/{{$data->id}}" name="add_role_form" id="add_role_form">
     <div class="formitems">
         <label class="fi-name"><span class="colorRed">*</span> 角色名称：</label>
         <div class="form-controls">
-            <input type="text" name="display_name" class="input" value="{{old('display_name')}}">
+            <input type="text" name="display_name" class="input" value="{{$data->display_name}}">
             <span class="fi-help-text">建议使用中文</span>
         </div>
     </div>
     <div class="formitems">
         <label class="fi-name"><span class="colorRed">*</span> 系统角色名称：</label>
         <div class="form-controls">
-            <input type="text" name="name" class="input" value="{{old('name')}}">
+            <input type="text" name="name" class="input" value="{{$data->name}}">
             <span class="fi-help-text">建议使用英文</span>
         </div>
     </div>
     <div class="add_role_box">
-        @foreach($data as $v)
+        @foreach($permissionList as $v)
         <div class="add-role-list sysPanel">
             <div class="add-role-tit">
                 <input type="checkbox" name="checkbox" id="checkbox8" class="che-t">

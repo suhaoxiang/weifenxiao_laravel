@@ -15,95 +15,39 @@
     <table class="wxtables">
         <colgroup>
             <col width="10%">
-            <col width="75%">
+            <col width="25%">
+            <col width="50%">
             <col width="15%">
         </colgroup>
         <thead>
         <tr>
             <td>角色ID</td>
             <td>角色名称</td>
+            <td>系统角色名称</td>
             <td>操作</td>
         </tr>
         </thead>
         <tbody>
+        @foreach($data as $v)
         <tr>
-            <td>4003187</td>
-            <td><b>产品管理</b></td>
+            <td>{{$v->id}}</td>
+            <td><b>{{$v->display_name}}</b></td>
+            <td>{{$v->name}}</td>
             <td>
-                <a href="/System/edit_role/id/4003187" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="4003187" title="删除"
-                   onclick="">删除</a>
+                <a href="/role/{{$v->id}}/edit" class="btn btn-mini btn-primary" title="编辑">编辑</a>
+                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="{{$v->id}}" title="删除"
+                   onclick="" data-href="/role/{{$v->id}}">删除</a>
             </td>
         </tr>
-        <tr>
-            <td>4003188</td>
-            <td><b>网站总编</b></td>
-            <td>
-                <a href="/System/edit_role/id/4003188" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="4003188" title="删除"
-                   onclick="">删除</a>
-            </td>
-        </tr>
-        <tr>
-            <td>4003189</td>
-            <td><b>订单管理</b></td>
-            <td>
-                <a href="/System/edit_role/id/4003189" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="4003189" title="删除"
-                   onclick="">删除</a>
-            </td>
-        </tr>
-        <tr>
-            <td>4003190</td>
-            <td><b>会员分销</b></td>
-            <td>
-                <a href="/System/edit_role/id/4003190" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="4003190" title="删除"
-                   onclick="">删除</a>
-            </td>
-        </tr>
-        <tr>
-            <td>4003654</td>
-            <td><b>财务</b></td>
-            <td>
-                <a href="/System/edit_role/id/4003654" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="4003654" title="删除"
-                   onclick="">删除</a>
-            </td>
-        </tr>
-        <tr>
-            <td>4003747</td>
-            <td><b>仓管</b></td>
-            <td>
-                <a href="/System/edit_role/id/4003747" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="4003747" title="删除"
-                   onclick="">删除</a>
-            </td>
-        </tr>
-        <tr>
-            <td>4004210</td>
-            <td><b>全部功能</b></td>
-            <td>
-                <a href="/System/edit_role/id/4004210" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="4004210" title="删除"
-                   onclick="">删除</a>
-            </td>
-        </tr>
-        <tr>
-            <td>4004248</td>
-            <td><b>供应商</b></td>
-            <td>
-                <a href="/System/edit_role/id/4004248" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="4004248" title="删除"
-                   onclick="">删除</a>
-            </td>
-        </tr>
+        @endforeach
+
         </tbody>
     </table>
     <!-- end wxtables -->
     <div class="tables-btmctrl clearfix">
         <div class="fr">
             <div class="paginate">
+                {{$data->links()}}
             </div>
             <!-- end paginate -->
         </div>

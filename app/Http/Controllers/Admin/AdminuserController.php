@@ -14,10 +14,10 @@ class AdminuserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(AdminUser $user)
     {
-        //
-        return view('admin.adminuser.index');
+        $data=$user->orderByDesc("id")->paginate(10);
+        return view('admin.adminuser.index')->with('data',$data);
     }
 
     /**
@@ -27,7 +27,6 @@ class AdminuserController extends BaseController
      */
     public function create()
     {
-
         return view('admin.adminuser.create');
     }
 
@@ -37,19 +36,15 @@ class AdminuserController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,AdminUser $user)
+    public function store(AdminUserRequest $request,AdminUser $user)
     {
-        p($request->all());
         $user->create([
             "name"=>$request->input("name"),
             "username"=>$request->input("username"),
             "password"=>bcrypt($request->input("password"))
         ]);
-
-//        $user->roles()->create(new Role([
-//            'role_id'=>$request->input('role_id')
-//        ]));
-        redirect("/adminuser")->withSuccess('添加成功！');
+        $user->updateRole($request->input('role_id'));
+        return redirect("/adminuser");
     }
 
     /**
@@ -69,9 +64,10 @@ class AdminuserController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(AdminUser $user,$id)
     {
-        //
+        $data=$user->findOrFail($id);
+        return view('admin.adminuser.edit',['data'=>$data]);
     }
 
     /**

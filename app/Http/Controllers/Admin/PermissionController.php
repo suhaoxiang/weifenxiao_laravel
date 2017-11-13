@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\PermissionRequest;
+use App\Model\Permission;
 use Illuminate\Http\Request;
 
 class PermissionController extends BaseController
@@ -11,9 +13,10 @@ class PermissionController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Permission $permission)
     {
-        return view('admin.permission.index');
+        $data=$permission::where("pid","=",0)->paginate(20);
+        return view('admin.permission.index',['data'=>$data]);
     }
 
     /**
@@ -21,9 +24,9 @@ class PermissionController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($pid=0)
     {
-        //
+        return view("admin.permission.create",['pid'=>$pid]);
     }
 
     /**
@@ -32,9 +35,16 @@ class PermissionController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PermissionRequest $request,Permission $permission)
     {
-        //
+        $permission::create([
+            'pid'=>$request->input('pid'),
+            'name'=>$request->input('name'),
+            'display_name'=>$request->input('display_name'),
+            'decription'=>$request->input('decription'),
+        ]);
+
+        return redirect('/permission');
     }
 
     /**
@@ -56,7 +66,8 @@ class PermissionController extends BaseController
      */
     public function edit($id)
     {
-        //
+        $data=Permission::findOrFail($id);
+        return view('admin.permission.edit',['data'=>$data]);
     }
 
     /**
@@ -66,9 +77,17 @@ class PermissionController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PermissionRequest $request, $id)
     {
-        //
+        $permission=Permission::find($id);
+        $permission->update([
+            'pid'=>$request->input('pid'),
+            'name'=>$request->input('name'),
+            'display_name'=>$request->input('display_name'),
+            'description'=>$request->input('description'),
+            'icon'=>$request->input('icon'),
+        ]);
+        return redirect('/permission');
     }
 
     /**

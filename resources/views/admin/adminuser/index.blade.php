@@ -37,48 +37,24 @@
     </tr>
     </thead>
     <tbody>
+    @foreach($data as $user)
     <tr>
-        <td>张三</td>
-        <td>产品管理</td>
-        <td>13396048861</td>
+        <td>{{$user->name}}</td>
+        <td>@foreach($user->roles as $role) {{$role->name}} @endforeach</td>
+        <td>{{$user->username}}</td>
         <td>
-            <a href="/System/edit_admin/id/4005659" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-            <a class="btn btn-mini btn-danger j-del" title="删除" href="javascript:;" data-id="4005659">删除</a>
+            <a href="/adminuser/{{$user->id}}/edit" class="btn btn-mini btn-primary" title="编辑">编辑</a>
+            <a class="btn btn-mini btn-danger j-del" title="删除" href="javascript:;" data-id="{{$user->id}}" data-href="/photos/{{$user->id}}">删除</a>
         </td>
     </tr>
-    <tr>
-        <td>王亚辉</td>
-        <td>网站总编</td>
-        <td>15515651778</td>
-        <td>
-            <a href="/System/edit_admin/id/4004112" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-            <a class="btn btn-mini btn-danger j-del" title="删除" href="javascript:;" data-id="4004112">删除</a>
-        </td>
-    </tr>
-    <tr>
-        <td>李元龙</td>
-        <td>仓管</td>
-        <td>18267901550</td>
-        <td>
-            <a href="/System/edit_admin/id/4004905" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-            <a class="btn btn-mini btn-danger j-del" title="删除" href="javascript:;" data-id="4004905">删除</a>
-        </td>
-    </tr>
-    <tr>
-        <td>小张</td>
-        <td>全部功能</td>
-        <td>18815282684</td>
-        <td>
-            <a href="/System/edit_admin/id/4005670" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-            <a class="btn btn-mini btn-danger j-del" title="删除" href="javascript:;" data-id="4005670">删除</a>
-        </td>
-    </tr>
+    @endforeach
     </tbody>
 
 </table>
 <div class="tables-btmctrl clearfix">
     <div class="fr">
         <div class="paginate">
+            {{ $data->links() }}
         </div>
         <!-- end paginate -->
     </div>

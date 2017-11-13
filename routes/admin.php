@@ -14,6 +14,7 @@ Route::group(['namespace'=>'Admin',"as"=>"admin."],function(){
     //系统设置
     Route::get('/system',['uses'=>'SystemController@shopInfo','as'=>'system']);
     //权限管理
+    Route::get('permission/{pid}/create','PermissionController@create');
     Route::resource('permission','PermissionController');
     //用户管理
     Route::resource('adminuser','AdminuserController');

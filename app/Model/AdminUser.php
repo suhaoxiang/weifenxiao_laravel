@@ -32,6 +32,15 @@ class AdminUser extends User
 
     public function roles()
     {
-        return $this->belongsToMany('App\Model\Role','role_user','id','role_id');
+        return $this->belongsToMany('App\Model\Role','role_user','user_id','role_id');
+    }
+
+    public function updateRole($role_id){
+        $this->roles()->detach();
+        $roles=Role::where("id","=",$role_id)->get();
+        foreach ($roles as $role){
+            return $this->roles()->save($role);
+        }
+        return true;
     }
 }

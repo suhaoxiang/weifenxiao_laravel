@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\RoleRequest;
+use App\Model\Permission;
+use App\Model\Role;
 use Illuminate\Http\Request;
 
 class RoleController extends BaseController
@@ -11,10 +14,10 @@ class RoleController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Role $role)
     {
-
-        return view('admin.role.index');
+        $data=$role::paginate(10);
+        return view('admin.role.index',['data'=>$data]);
     }
 
     /**
@@ -22,10 +25,10 @@ class RoleController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Permission $permission)
     {
-
-        return view('admin.role.create');
+        $data=$permission->where("pid","=","0")->get();
+        return view('admin.role.create',['data'=>$data]);
     }
 
     /**
@@ -34,9 +37,17 @@ class RoleController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request,Role $role)
     {
-        //
+        $role->name=$request->input('name');
+        $role->display_name=$request->input('display_name');
+        $role->save();
+
+        $privList=$request->input("priv");
+        if(is_array($privList))
+            $role->permission()->sync($privList);
+
+        return redirect('/role');
     }
 
     /**
@@ -58,7 +69,9 @@ class RoleController extends BaseController
      */
     public function edit($id)
     {
-        //
+        $data=Role::findOrFail($id);
+        $permissionList=Permission::where("pid","=","0")->get();
+        return view('admin.role.edit',['data'=>$data,'permissionList'=>$permissionList]);
     }
 
     /**
