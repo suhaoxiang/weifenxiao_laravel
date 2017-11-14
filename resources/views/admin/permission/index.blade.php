@@ -7,7 +7,7 @@
 @section('main')
 <h1 class="content-right-title">权限管理</h1>
 
-<a href="/permission/create" class="btn btn-success">添加权限</a>
+<a href="/permission/create" class="btn btn-success">添加顶级权限</a>
 
 <table class="wxtables mgt15">
     <colgroup>

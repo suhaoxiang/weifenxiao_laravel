@@ -23,12 +23,25 @@ class RoleRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name'=>'required|unique:roles|max:255',
-            'display_name'=>'required|max:255',
-            'description'=>'sometimes|max:255',
-        ];
-
+        switch ($this->method()){
+            case 'POST':
+            {
+                return [
+                    'name'=>'required|unique:roles|max:255',
+                    'display_name'=>'required|max:255',
+                    'description'=>'sometimes|max:255',
+                ];
+            }
+            case 'PUT':
+            {
+                return [
+                    'name'=>'required|unique:roles,name,'.$this->segment(2).'|max:255',
+                    'display_name'=>'required|max:255',
+                    'description'=>'sometimes|max:255',
+                ];
+            }
+            default:break;
+        }
     }
 
     public function messages()

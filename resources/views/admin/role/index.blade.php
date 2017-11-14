@@ -35,8 +35,8 @@
             <td>{{$v->name}}</td>
             <td>
                 <a href="/role/{{$v->id}}/edit" class="btn btn-mini btn-primary" title="编辑">编辑</a>
-                <a href="javascript:;" class="btn btn-mini btn-danger j-del" data-id="{{$v->id}}" title="删除"
-                   onclick="" data-href="/role/{{$v->id}}">删除</a>
+                <a href="javascript:;" class="btn btn-mini btn-danger j-del"  title="删除"
+                   data-href="/role/{{$v->id}}">删除</a>
             </td>
         </tr>
         @endforeach

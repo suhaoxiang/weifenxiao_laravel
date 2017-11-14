@@ -71,7 +71,14 @@ class RoleController extends BaseController
     {
         $data=Role::findOrFail($id);
         $permissionList=Permission::where("pid","=","0")->get();
-        return view('admin.role.edit',['data'=>$data,'permissionList'=>$permissionList]);
+
+        $priv=$data->permission()->get();
+        $privList=[];
+        foreach ($priv as $v){
+            $privList[]=$v->id;
+        }
+
+        return view('admin.role.edit',['data'=>$data,'permissionList'=>$permissionList,'privList'=>$privList]);
     }
 
     /**
@@ -81,9 +88,11 @@ class RoleController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RoleRequest $request, $id)
     {
-        //
+        $role=Role::findOrFail($id);
+        $role->update($request->all());
+        return redirect('/role');
     }
 
     /**
@@ -94,6 +103,19 @@ class RoleController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $role=Role::find($id);
+
+        if($role != null){
+            foreach ($role->users as $item){
+                $role->users()->detach($item);
+            }
+
+            foreach ($role->permission as $item){
+                $role->permission()->detach($item);
+            }
+            $role->delete();
+            return $this->msg("删除成功");
+        }
+        return $this->msg("删除失败",0);
     }
 }

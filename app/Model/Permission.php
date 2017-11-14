@@ -19,4 +19,9 @@ class Permission extends EntrustPermission
     public function getPermissionList($pid){
         return $this->where("pid","=",$pid)->get();
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany('App\Model\Role','permission_role','permission_id','role_id');
+    }
 }

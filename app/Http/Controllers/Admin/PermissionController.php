@@ -98,6 +98,27 @@ class PermissionController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $permission=Permission::find($id);
+        if($permission != null){
+            //删除子权限
+            $privList=$permission->getPermissionList($id);
+            if($privList != null){
+                foreach ($privList as $priv){
+                    foreach ($priv->roles as $item){
+                        $priv->roles()->detach($item);
+                    }
+                    $priv->delete();
+                }
+            }
+
+            foreach ($permission->roles as $item){
+                $permission->roles()->detach($item);
+            }
+
+            $permission->delete();
+
+            return $this->msg("删除成功");
+        }
+        return $this->msg("删除失败",0);
     }
 }

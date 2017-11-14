@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\AdminUserRequest;
 use App\Model\AdminUser;
 use App\Model\Role;
+use App\User;
 use Illuminate\Http\Request;
 
 class AdminuserController extends BaseController
@@ -27,7 +28,8 @@ class AdminuserController extends BaseController
      */
     public function create()
     {
-        return view('admin.adminuser.create');
+        $roleList=Role::all();
+        return view('admin.adminuser.create',['roleList'=>$roleList]);
     }
 
     /**
@@ -67,7 +69,12 @@ class AdminuserController extends BaseController
     public function edit(AdminUser $user,$id)
     {
         $data=$user->findOrFail($id);
-        return view('admin.adminuser.edit',['data'=>$data]);
+        $roles=[];
+        foreach ($data->roles as $item){
+            $roles[]=$item->id;
+        }
+        $roleList=Role::all();
+        return view('admin.adminuser.edit',['data'=>$data,'roleList'=>$roleList,'roles'=>$roles]);
     }
 
     /**
@@ -79,7 +86,14 @@ class AdminuserController extends BaseController
      */
     public function update(AdminUserRequest $request, $id)
     {
-//        p($request->all());
+        $user=AdminUser::findOrFail($id);
+        $user->update([
+            "name"=>$request->input("name"),
+            "username"=>$request->input("username"),
+            "password"=>bcrypt($request->input("password"))
+        ]);
+        $user->updateRole($request->input('role_id'));
+        return redirect('/adminuser');
     }
 
     /**
@@ -90,6 +104,15 @@ class AdminuserController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        $user=AdminUser::find($id);
+        if($user != null){
+            foreach ($user->roles as $item){
+                $user->roles()->detach($item);
+            }
+            $user->delete();
+            return $this->msg("删除成功");
+        }
+        return $this->msg("删除失败",0);
+
     }
 }

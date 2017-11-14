@@ -44,8 +44,9 @@
             <div class="form-controls">
                 <select name="role_id" class="select">
                     <option value="0" selected="">--请选择--</option>
-                    <option value="1">全部功能</option>
-                    <option value="2">供应商</option>
+                    @foreach($roleList as $role)
+                    <option value="{{$role->id}}">{{$role->display_name}}({{$role->name}})</option>
+                    @endforeach
                 </select>
                 <span class="fi-help-text"></span>
             </div>

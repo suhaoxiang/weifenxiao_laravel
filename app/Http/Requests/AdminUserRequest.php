@@ -26,13 +26,30 @@ class AdminUserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name'=>'required|max:255',
-            'username'=>'required|unique:admin_users|max:255',
-            'password'=>'required|confirmed|min:6|max:21',
-            'password_confirmation'=>'required',
-            'role_id'=>'required'
-        ];
+        switch ($this->method()){
+            case 'POST':
+            {
+                return [
+                    'name'=>'required|max:255',
+                    'username'=>'required|unique:admin_users|max:255',
+                    'password'=>'required|confirmed|min:6|max:21',
+                    'password_confirmation'=>'required',
+                    'role_id'=>'required'
+                ];
+            }
+            case 'PUT':
+            {
+                return [
+                    'name'=>'required|max:255',
+                    'username'=>'required|unique:admin_users,username,'.$this->segment(2).'|max:255',
+                    'password'=>'required|confirmed|min:6|max:21',
+                    'password_confirmation'=>'required',
+                    'role_id'=>'required'
+                ];
+            }
+            default:break;
+        }
+
     }
 
     public function messages()

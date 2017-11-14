@@ -32,7 +32,7 @@
             </div>
             <ul>
                 @foreach($v->getPermissionList($v->id) as $son)
-                <li class="menu_li"><input type="checkbox" name="priv[]" id="{{$son->id}}" class="che-li" value="{{$son->id}}"> <label
+                <li class="menu_li"><input type="checkbox" name="priv[]" id="{{$son->id}}" class="che-li" value="{{$son->id}}" @if(in_array($son->id,$privList))checked="true" @endif> <label
                         for="{{$son->id}}">{{$son->display_name}}</label></li>
                 @endforeach
             </ul>
@@ -41,6 +41,7 @@
         <span class="fi-help-text"></span>
     </div>
     {!!csrf_field()!!}
+    {{method_field('PUT')}}
     <div style="margin-left:110px;">
         <button type="submit" class="btn btn-primary">保存</button>
     </div>
@@ -52,7 +53,6 @@
 <script>
     require(['jquery'],function($){
         $(".che-t").click(function(){
-            console.log(1);
             $(this).parents(".add-role-list").find(".che-li").attr("checked",this.checked);
         });
     });
