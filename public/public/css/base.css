@@ -4816,4 +4816,6 @@ a.Jclose {
     height      : 30px;
     line-height : 30px;
 }
-
+#iconpicker{
+    position: relative;
+}

@@ -27,6 +27,13 @@
             </div>
         </div>
         <div class="formitems">
+            <label class="fi-name"><span class="colorRed"></span>选择图标：</label>
+            <div class="form-controls">
+                <button class="btn btn-default" role="iconpicker" name="" id="iconpicker"></button>
+                <span class="fi-help-text"></span>
+            </div>
+        </div>
+        <div class="formitems">
             <label class="fi-name"><span class="colorRed"></span>权限简介：</label>
             <div class="form-controls">
                 <textarea class="textarea" name="description">{{$data->description}}</textarea>
@@ -42,5 +49,9 @@
 @endsection
 
 @section('js')
+<script>
+    require(['jquery10','iconpicker'],function($){
 
+    })
+</script>
 @endsection
