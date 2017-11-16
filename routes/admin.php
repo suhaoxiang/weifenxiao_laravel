@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['namespace'=>'Admin',"as"=>"admin."],function(){
+Route::group(['namespace'=>'Admin',"as"=>"admin.","middleware"=>['menu']],function(){
     //登录页面
     Route::get('login','LoginController@index')->name('login');
     //处理登录页面
