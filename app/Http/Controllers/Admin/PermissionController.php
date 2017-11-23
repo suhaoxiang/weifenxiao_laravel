@@ -40,6 +40,7 @@ class PermissionController extends BaseController
         $permission::create([
             'pid'=>$request->input('pid'),
             'name'=>$request->input('name'),
+            'icon'=>$request->input('icon'),
             'display_name'=>$request->input('display_name'),
             'decription'=>$request->input('decription'),
         ]);

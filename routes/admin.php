@@ -20,5 +20,8 @@ Route::group(['namespace'=>'Admin',"as"=>"admin.","middleware"=>['menu']],functi
     Route::resource('adminuser','AdminuserController');
     //角色管理
     Route::resource('role','RoleController');
+
+    //图片管理器
+    Route::post('images/getFolderTree','ImagesController@getFolderTree');
 });
 

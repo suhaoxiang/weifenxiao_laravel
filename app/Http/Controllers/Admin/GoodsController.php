@@ -14,7 +14,8 @@ class GoodsController extends BaseController
      */
     public function index()
     {
-        //
+
+        return view('admin.goods.index');
     }
 
     /**

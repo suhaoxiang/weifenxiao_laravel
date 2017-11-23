@@ -53,7 +53,7 @@
 <script>
     require(['jquery'],function($){
         $(".che-t").click(function(){
-            $(this).parents(".add-role-list").find(".che-li").attr("checked",this.checked);
+            $(this).parents(".add-role-list").find(".che-li").prop("checked",this.checked);
         });
     });
 </script>

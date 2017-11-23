@@ -19,7 +19,7 @@ class Menu
     {
         $previousUrl = URL::previous();
         $routeName = starts_with(Route::currentRouteName(), 'admin.') ? Route::currentRouteName() : 'admin.' . Route::currentRouteName();
-        echo $routeName;
+//        echo $routeName;
         return $next($request);
     }
 }

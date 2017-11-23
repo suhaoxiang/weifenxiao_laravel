@@ -25,6 +25,15 @@
                 <span class="fi-help-text"></span>
             </div>
         </div>
+        @if($pid == 0)
+        <div class="formitems">
+            <label class="fi-name"><span class="colorRed"></span>选择图标：</label>
+            <div class="form-controls">
+                <button class="btn btn-default" role="iconpicker" name="icon" id="iconpicker" data-icon=""></button>
+                <span class="fi-help-text"></span>
+            </div>
+        </div>
+        @endif
         <div class="formitems">
             <label class="fi-name"><span class="colorRed"></span>权限简介：</label>
             <div class="form-controls">
@@ -41,5 +50,9 @@
 @endsection
 
 @section('js')
+<script>
+    require(['iconpicker'],function($){
 
+    })
+</script>
 @endsection
