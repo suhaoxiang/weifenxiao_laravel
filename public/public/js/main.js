@@ -9,8 +9,10 @@ require.config({
         "underscore":"dist/underscore-min",
         "layer":"dist/layer/layer",
         "iconpicker":"dist/iconpicker/bootstrap-iconpicker",
+        "uploadify":"dist/uploadify/jquery.uploadify.min",
         "util":"util",
-        "imagePicker":"dist/image-picker",
+        "cookie":"dist/jquery.cookie",
+        "imagePicker":"dist/image-picker"
     },
     shim:{
         "layer":{
@@ -19,6 +21,9 @@ require.config({
         "iconpicker":{
             "deps":['jquery','css!dist/bootstrap/css/bootstrap_diy.css','css!dist/iconpicker/bootstrap-iconpicker.css',"dist/bootstrap/js/bootstrap","dist/iconpicker/bootstrap-iconpicker-iconset-all"],
 
+        },
+        "uploadify":{
+            "deps":["jquery","cookie","css!dist/uploadify/uploadify.css"]
         }
     }
 });

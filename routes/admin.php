@@ -23,5 +23,7 @@ Route::group(['namespace'=>'Admin',"as"=>"admin.","middleware"=>['menu']],functi
 
     //图片管理器
     Route::post('images/getFolderTree','ImagesController@getFolderTree');
+    Route::post('images/getImgList','ImagesController@getImgList');
+    Route::post('images/addImg','ImagesController@addImg');
 });
 
