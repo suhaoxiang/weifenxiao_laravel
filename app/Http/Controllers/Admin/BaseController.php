@@ -15,12 +15,13 @@ abstract class BaseController extends Controller
      * @param string $url 跳转地址
      * @return mixed
      */
-    public function msg($data=[], $type=1, $url='',$msg=""){
+    public function msg($type=1, $msg="",$data=[], $url='',$page=""){
         return response()->json([
             "data"=>$data,
             "status"=>$type,
             "url"=>$url,
-            "msg"=>"",
+            "msg"=>$msg,
+            "page"=>$page,
         ]);
     }
 }

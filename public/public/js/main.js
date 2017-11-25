@@ -12,7 +12,8 @@ require.config({
         "uploadify":"dist/uploadify/jquery.uploadify.min",
         "util":"util",
         "cookie":"dist/jquery.cookie",
-        "imagePicker":"dist/image-picker"
+        "imagePicker":"dist/image-picker",
+        "jbox":"dist/jbox/jBox",
     },
     shim:{
         "layer":{
@@ -24,6 +25,9 @@ require.config({
         },
         "uploadify":{
             "deps":["jquery","cookie","css!dist/uploadify/uploadify.css"]
+        },
+        "jbox":{
+            "deps":['jquery','css!dist/jbox/jBox.css']
         }
     }
 });

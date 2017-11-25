@@ -114,8 +114,8 @@ class RoleController extends BaseController
                 $role->permission()->detach($item);
             }
             $role->delete();
-            return $this->msg("删除成功");
+            return $this->msg(1,"删除成功");
         }
-        return $this->msg("删除失败",0);
+        return $this->msg(0,"删除失败");
     }
 }

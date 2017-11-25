@@ -25,5 +25,10 @@ Route::group(['namespace'=>'Admin',"as"=>"admin.","middleware"=>['menu']],functi
     Route::post('images/getFolderTree','ImagesController@getFolderTree');
     Route::post('images/getImgList','ImagesController@getImgList');
     Route::post('images/addImg','ImagesController@addImg');
+    Route::post('images/delImg','ImagesController@delImg');
+    Route::post('images/renameImg','ImagesController@renameImg');
+    Route::post('images/addFolder','ImagesController@addFolder');
+    Route::post('images/renameFolder','ImagesController@renameFolder');
+
 });
 

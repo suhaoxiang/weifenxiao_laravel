@@ -47,7 +47,7 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
             });
         },
         imagePicker:function(){
-            require(['text!tpl/albums_main.tpl','text!tpl/albums_overlay.tpl','text!tpl/albums_tree.tpl','text!tpl/albums_tree_fn.tpl','text!tpl/albums_imgs.tpl'],function(albums_main,albums_overlay,albums_tree,albums_tree_fn,albums_imgs){
+            require(['text!tpl/albums_main.tpl','text!tpl/albums_overlay.tpl','text!tpl/albums_tree.tpl','text!tpl/albums_tree_fn.tpl','text!tpl/albums_imgs.tpl','text!tpl/ablums_delFolder.tpl','jbox'],function(albums_main,albums_overlay,albums_tree,albums_tree_fn,albums_imgs,ablums_delFolder){
                 //定义一些变量
                 var i = { callback: null },
                     t = {},
@@ -67,6 +67,10 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                         getSubFolderTree:"/images/getSubFolderTree",
                         addFolder:"/images/addFolder",
                         addImg:"/images/addImg",
+                        delImg:"/images/delImg",
+                        renameImg:"/images/renameImg",
+                        addFolder:"/images/addFolder",
+                        renameFolder:"/images/renameFolder",
                         swf:"/public/js/dist/uploadify/uploadify.swf",
                     };
 
@@ -148,8 +152,9 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                             if (1 == n.status) {
                                 var o = _.template(a.treeFn),
                                     i = o({ dataset: n.data.tree, templateFn: o }),
-                                    t = $(_.template(a.tree, { dataset: n.data, nodes: i }));
-                                tr.empty().append(t), d.find(".j-albumsNodes > dt:first").click()
+                                    t = _.template(a.tree, { dataset: n.data, nodes: i });
+                                tr.empty().append(t);
+                                d.find(".j-albumsNodes > dt:first").click()
                             } else {
                                 layer.msg("对不起，文件夹获取失败：" + n.msg);
                             }
@@ -213,28 +218,44 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                         return t.callback && (t.callback(o), P()), !1
                     });
                     p.click(function() {
+                        //添加文件夹
                         var n = [{ id: 0, name: "未命名文件夹", picNum: 0 }];
-                        e.ajax({
+                        $.ajax({
                             url: l.addFolder + "?v=" + Math.round(100 * Math.random()),
                             type: "post",
                             dataType: "json",
                             data: { name: n.name, parent_id: s.folderID },
                             success: function(o) {
                                 if (1 == o.status) {
-                                    n[0].id = o.data;
+                                    n[0].id = o.data.id;
                                     var i = _.template(a.treeFn, { dataset: n });
-                                    $render = e(i), $.find("dt[data-id='" + s.folderID + "']").siblings("dd").append($render), $render.css("display", "block"), $render.parent().siblings("dt").find(".icon-folder").addClass("open"), $render.find("dt:first").click(), m.click()
+                                    $render = $(i), tr.find("dt[data-id='" + s.folderID + "']").siblings("dd").append($render), $render.css("display", "block"), $render.parent().siblings("dt").find(".icon-folder").addClass("open"), $render.find("dt:first").click(), m.click()
                                 } else layer.msg("对不起，添加失败：" + o.msg)
                             }
                         })
                     }), m.click(function() {
-                        var n = $.find("dt[data-id='" + s.folderID + "']"),
+                        //双击重命名
+                        var n = tr.find("dt[data-id='" + s.folderID + "']"),
                             o = n.find(".j-treeShowTxt"),
                             i = n.find(".j-ip"),
                             t = n.find(".j-loading");
                         o.hide(), i.show().focus().select(), i.blur(function() {
-                            var n = e(this).val();
-                            e.ajax({ url: l.renameFolder + "?v=" + Math.round(100 * Math.random()), type: "post", dataType: "json", data: { name: n, category_img_id: s.folderID }, beforeSend: function() { t.css("display", "inline-block") }, success: function(e) { 1 == e.status ? o.find(".j-name").text(n) : HYD.hint("danger", "对不起，重命名失败：" + e.msg), o.show(), i.hide(), t.hide() } })
+                            var n = $(this).val();
+                            $.ajax({
+                                url: l.renameFolder + "?v=" + Math.round(100 * Math.random()),
+                                type: "post",
+                                dataType: "json",
+                                data: {
+                                    name: n,
+                                    folder_id: 0
+                                },
+                                beforeSend: function() {
+                                    t.css("display", "inline-block")
+                                },
+                                success: function(e) {
+                                    1 == e.status ? o.find(".j-name").text(n) : layer.msg("对不起，重命名失败：" + e.msg), o.show(), i.hide(), t.hide()
+                                }
+                            })
                         })
                     }), f.click(function() {
                         var n = e("#tpl_albums_delFolder").html(),
@@ -263,11 +284,24 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                             }
                         })
                     }), v.click(function() {
-                        if (!d.find("#j-panelImgs li.selected").length) return void HYD.hint("warning", "请选择要删除的图片！");
+                        //删除文件按钮
+                        if (!d.find("#j-panelImgs li.selected").length) return layer.msg("请选择要删除的图片！");
                         var n = [];
-                        d.find("#j-panelImgs li.selected").each(function() { n.push(e(this).data("id")) }), e.ajax({ url: l.delImg + "?v=" + Math.round(100 * Math.random()), type: "post", dataType: "json", data: { file_id: n }, success: function(n) { 1 == n.status ? (d.find("#j-panelImgs li.selected").fadeOut(300, function() { e(this).remove() }), UpdateSubTreeNums()) : HYD.hint("danger", "对不起，删除失败：" + n.msg) } })
+                        d.find("#j-panelImgs li.selected").each(function() {
+                            n.push($(this).data("id"))
+                        });
+                        $.ajax({
+                            url: l.delImg + "?v=" + Math.round(100 * Math.random()),
+                            type: "post",
+                            dataType: "json",
+                            data: { file_id: n },
+                            success: function(n) {
+                                1 == n.status ? (d.find("#j-panelImgs li.selected").fadeOut(300, function() { $(this).remove() }), UpdateSubTreeNums()) : layer.msg("对不起，删除失败：" + n.msg)
+                            }
+                        })
                     }),
                     function() {
+                        //上传按钮
                         var n = navigator.userAgent.toLowerCase(),
                             o = "ipad" == n.match(/ipad/i),
                             i = "iphone os" == n.match(/iphone os/i),
@@ -343,9 +377,12 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                         }
                     }();
                     b.click(function() {
-                        if (!d.find("#j-panelImgs li.selected").length) return void HYD.hint("warning", "请选择要移动的图片！");
-                        var n = e("<div class='albums-cl-tree j-albumsNodes j-propagation'></div>");
-                        n.append($.find("dd:first").contents().clone()), e.jBox.show({
+                        //移动文件
+                        if (!d.find("#j-panelImgs li.selected").length) return void layer.msg("请选择要移动的图片！");
+                        var n = $("<div class='albums-cl-tree j-albumsNodes j-propagation'></div>");
+                        n.append(tr.find("dd:first").contents().clone());
+
+                        $.jBox.show({
                             title: "请选择移动文件夹",
                             content: n,
                             onOpen: function() { n.find("dt:first").click() },
@@ -360,34 +397,10 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                                         success: function(o) {
                                             if (1 == o.status) {
                                                 var i = e(n).find(".j-albumsNodes .selected").data("id");
-                                                d.find("#j-panelImgs li.selected").fadeOut(300, function() { e(this).remove() }), UpdateSubTreeNums(), UpdateSubTreeNums(i), HYD.hint("success", "恭喜您，操作成功！")
-                                            } else HYD.hint("danger", "对不起，移动失败：" + o.msg)
+                                                d.find("#j-panelImgs li.selected").fadeOut(300, function() { $(this).remove() }), UpdateSubTreeNums(), UpdateSubTreeNums(i), layer.msg("恭喜您，操作成功！")
+                                            } else layer.msg("对不起，移动失败：" + o.msg)
                                         }
-                                    }), e.jBox.close(n)
-                                }
-                            }
-                        })
-                    }), y.click(function() {
-                        if (!s.folderID) return void HYD.hint("warning", "请选择要移动的分类！");
-                        var n = e("<div class='albums-cl-tree j-albumsNodes j-propagation'></div>");
-                        n.append($.find("dd:first").contents().clone()), e.jBox.show({
-                            title: "请选择移动文件夹",
-                            content: n,
-                            onOpen: function() { n.find("dt:first").click() },
-                            btnOK: {
-                                onBtnClick: function(n) {
-                                    e.ajax({
-                                        url: l.moveCateImg + "?v=" + Math.round(100 * Math.random()),
-                                        type: "post",
-                                        dataType: "json",
-                                        data: { cid: s.folderID, cate_id: s.moveFolderID },
-                                        success: function(o) {
-                                            if (1 == o.status) {
-                                                var i = e(n).find(".j-albumsNodes .selected").data("id");
-                                                d.find("#j-panelImgs li.selected").fadeOut(300, function() { e(this).remove() }), UpdateSubTreeNums(), UpdateSubTreeNums(i), HYD.hint("success", "恭喜您，操作成功！")
-                                            } else HYD.hint("danger", "对不起，移动失败：" + o.msg)
-                                        }
-                                    }), e.jBox.close(n)
+                                    }), $.jBox.close(n)
                                 }
                             }
                         })
@@ -413,7 +426,7 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                             file_name: i
                         },
                         success: function(e) {
-                            1 == e.status ? (n.closest(".albums-edit").children(".img-name-edit").hide(), n.closest(".albums-edit").children("p").html(i), n.closest(".albums-edit").children("input.file_name").val(i), HYD.hint("success", "恭喜您，操作成功！")) : HYD.hint("danger", "对不起，操作失败")
+                            1 == e.status ? (n.closest(".albums-edit").children(".img-name-edit").hide(), n.closest(".albums-edit").children("p").html(i), n.closest(".albums-edit").children("input.file_name").val(i), layer.msg("success", "恭喜您，操作成功！")) : layer.msg("danger", "对不起，操作失败")
                         }
                     })
                 });
