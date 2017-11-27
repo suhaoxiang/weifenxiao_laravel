@@ -6,9 +6,13 @@ use App\Model\Images;
 use App\Model\ImagesFolder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\HtmlString;
 
 class ImagesController extends BaseController
 {
+    /**
+     * @var ImagesFolder
+     */
     protected $folder;
     protected $images;
 
@@ -18,10 +22,14 @@ class ImagesController extends BaseController
         $this->images=neW Images();
     }
 
+    /**
+     * 
+     * @return mixed
+     */
     public function getFolderTree()
     {
         $data=$this->folder->getAllList();
-        $count=$this->folder->getAllCount();
+        $count=$this->images->count();
         
         return $this->msg(1,"",[
             'tree'=>$data,
@@ -32,16 +40,18 @@ class ImagesController extends BaseController
     public function getImgList(Request $request)
     {
         $params=$request->all();
+        $where=array();
         if(isset($params['id'])){
             $id=intValue($params['id'])?$params['id']:0;
-            $data=$this->images->getImagesListByFolderId($id);
-        }else{
-            $data=$this->images->getImagesListByFolderId();
+            $where[]=['folder_id',"=",$id];
         }
+        if(isset($params['file_name'])){
+            $where[]=['name',"like",'%'.$params['file_name'].'%'];
+        }
+        $data=$this->images->getImagesListByFolderId($where);
         $arr=array();
         $arr=$data->toArray();
-//        p($data->links());
-        return $this->msg(1,"",transImagePath($arr['data']),"",$data->links());
+        return $this->msg(1,"",transImagePath($arr['data']),"",$data->toHtml());
     }
 
     public function addImg(Request $request)
@@ -98,8 +108,45 @@ class ImagesController extends BaseController
         $folder=$this->folder->find($request->input("folder_id"));
         if($folder){
             $folder->name=$request->input("name","未命名文件夹");
+            $folder->save();
             return $this->msg(1,"");
         }
         return $this->msg(0,"");
+    }
+
+    public function delFolder(Request $request)
+    {
+        $id=$request->input("id",0);
+        if($id){
+            $this->folder->destroy($id);
+            $this->images->where("folder_id","=",$id)->delete();
+            return $this->msg(1,"删除成功");
+        }else{
+            return $this->msg(0,"删除失败");
+        }
+    }
+
+    public function moveImg(Request $request){
+        $file_id=$request->input("file_id");
+        $folder_id=$request->input("folder_id");
+        $res=$this->images->whereIn("id",$file_id)->update(['folder_id'=>$folder_id]);
+        if($res)
+            return $this->msg(1,"移动成功");
+        else
+            return $this->msg(0,"移动失败");
+    }
+
+    public function getAllFolderTree(Request $request)
+    {
+        $folder_id=$request->input("id",0);
+        $data=array();
+        $tree=array();
+        $data['total']=$this->images->count();
+        $data['nocat_total']=$this->images->where("folder_id",0)->count();
+        if($folder_id >= 0){
+            $tree=$this->folder->getInfo($folder_id);
+        }
+        $data['tree'][]=$tree;
+        return $this->msg(1,"",$data);
     }
 }

@@ -10,13 +10,13 @@ class Images extends Model
         'folder_id','name','file'
     ];
 
-    public function getImagesListByFolderId($folder_id=null){
-        if(is_null($folder_id)){
+    public function getImagesListByFolderId($where=array()){
+        if(empty($where)){
             //表示获取所有图
             return $this->orderByDesc("id")->paginate(28);
         }else{
             //获取某个文件夹下的图片
-            return $this->where("folder_id","=",$folder_id)->orderByDesc("id")->paginate(28);
+            return $this->where($where)->orderByDesc("id")->paginate(28);
         }
     }
 

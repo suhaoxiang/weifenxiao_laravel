@@ -71,6 +71,9 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                         renameImg:"/images/renameImg",
                         addFolder:"/images/addFolder",
                         renameFolder:"/images/renameFolder",
+                        delFolder:"/images/delFolder",
+                        moveImg:"/images/moveImg",
+                        getAllFolderTree:"/images/getAllFolderTree",
                         swf:"/public/js/dist/uploadify/uploadify.swf",
                     };
 
@@ -79,7 +82,7 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                     var c = arguments.callee,
                         r = n.find("#j-panelImgs"),
                         d = n.find("#j-panelPaginate"),
-                        u = o >= 0 ? { id: o, p: i, file_name: t } : { p: i, file_name: t };
+                        u = o >= 0 ? { id: o, page: i, file_name: t } : { page: i, file_name: t };
                     "undefined" == typeof GLOBAL_NEED_COMPRESS || 0 == GLOBAL_NEED_COMPRESS ? u.need_compress = 0 : u.need_compress = 1, $.ajax({
                         url: l.getImgList + "?v=" + Math.round(100 * Math.random()),
                         type: "post",
@@ -104,7 +107,7 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                 UpdateSubTreeNums = function(o) {
                     if ("undefined" == typeof o) var o = $(document).find(".j-albumsNodes .selected").data("id");
                     $.ajax({
-                        url: "/Design/getAllSubFolderTree?v=" + Math.round(100 * Math.random()),
+                        url: l.getAllFolderTree + "?v=" + Math.round(100 * Math.random()),
                         type: "post",
                         dataType: "json",
                         data: { id: o },
@@ -201,12 +204,15 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                     });
 
                     var x = 0;
+                    //选择文件
                     d.on("click", "#j-panelImgs li", function() {
                         return $(this).toggleClass("selected"), $(this).find(".img-name-edit").hide(), $(this).data("selectindex", x++), !1
                     });
+                    //编辑文件
                     d.on("click", "#j-panelImgs li .albums-edit", function() {
                         return $(this).children(".img-name-edit").show(), !1
                     });
+                    //使用文件
                     d.on("click", "#j-useImg", function() {
                         if (!d.find("#j-panelImgs li.selected").length) return void layer.msg("warning", "请选择图片！");
                         var n = {},
@@ -247,7 +253,7 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                                 dataType: "json",
                                 data: {
                                     name: n,
-                                    folder_id: 0
+                                    folder_id:s.folderID
                                 },
                                 beforeSend: function() {
                                     t.css("display", "inline-block")
@@ -258,31 +264,34 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                             })
                         })
                     }), f.click(function() {
-                        var n = e("#tpl_albums_delFolder").html(),
-                            o = e(n),
+                        //删除文件夹
+                        var n = $(ablums_delFolder).html(),
+                            o = $(n),
                             i = o.find("input[name=isDelImgs]");
-                        $.jBox.show({
-                            title: "提示",
-                            content: o,
-                            btnOK: {
-                                onBtnClick: function(n) {
-                                    var o = i.filter(":checked").val();
-                                    $.ajax({
-                                        url: l.delFolder + "?v=" + Math.round(100 * Math.random()),
-                                        type: "post",
-                                        dataType: "json",
-                                        data: { type: o, id: s.folderID },
-                                        success: function(e) {
-                                            if (1 == e.status) {
-                                                UpdateSubTreeNums();
-                                                var n = $.find("dt[data-id=" + s.folderID + "]").parent("dl");
-                                                n.parent("dd").siblings("dt").click(), n.remove()
-                                            } else HYD.hint("danger", "对不起，删除失败失败：" + e.msg)
-                                        }
-                                    }), e.jBox.close(n)
-                                }
+                        layer.confirm('提示', {
+                            title:'提示',
+                            content:"删除后将不可恢复，是否继续？",
+                            btn: ['确认','取消'],
+                            yes: function(index){
+                                $.ajax({
+                                    url: l.delFolder + "?v=" + Math.round(100 * Math.random()),
+                                    type: "post",
+                                    dataType: "json",
+                                    data: { id: s.folderID },
+                                    success: function(e) {
+                                        if (1 == e.status) {
+                                            UpdateSubTreeNums();
+                                            var n = tr.find("dt[data-id=" + s.folderID + "]").parent("dl");
+                                            n.parent("dd").siblings("dt").click(), n.remove()
+                                        } else layer.msg("对不起，删除失败失败：" + e.msg)
+                                    }
+                                });
+                                layer.close(index);
+                                layer.load(0);
+                                layer.closeAll('loading');
                             }
-                        })
+                        });
+
                     }), v.click(function() {
                         //删除文件按钮
                         if (!d.find("#j-panelImgs li.selected").length) return layer.msg("请选择要删除的图片！");
@@ -365,7 +374,7 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                                     layer.msg("您未安装FLASH控件，无法上传图片！请安装FLASH控件后再试。")
                                 },
                                 onUploadSuccess: function(e, n, o) {
-                                    console.log(e, n, o)
+                                    // console.log(e, n, o)
                                 },
                                 onQueueComplete: function(e) {
                                     r(d, s.folderID, 1), UpdateSubTreeNums()
@@ -381,29 +390,29 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                         if (!d.find("#j-panelImgs li.selected").length) return void layer.msg("请选择要移动的图片！");
                         var n = $("<div class='albums-cl-tree j-albumsNodes j-propagation'></div>");
                         n.append(tr.find("dd:first").contents().clone());
-
-                        $.jBox.show({
-                            title: "请选择移动文件夹",
-                            content: n,
-                            onOpen: function() { n.find("dt:first").click() },
-                            btnOK: {
-                                onBtnClick: function(n) {
-                                    var o = [];
-                                    d.find("#j-panelImgs li.selected").each(function() { o.push(e(this).data("id")) }), e.ajax({
-                                        url: l.moveImg + "?v=" + Math.round(100 * Math.random()),
-                                        type: "post",
-                                        dataType: "json",
-                                        data: { file_id: o, cate_id: s.moveFolderID },
-                                        success: function(o) {
-                                            if (1 == o.status) {
-                                                var i = e(n).find(".j-albumsNodes .selected").data("id");
-                                                d.find("#j-panelImgs li.selected").fadeOut(300, function() { $(this).remove() }), UpdateSubTreeNums(), UpdateSubTreeNums(i), layer.msg("恭喜您，操作成功！")
-                                            } else layer.msg("对不起，移动失败：" + o.msg)
-                                        }
-                                    }), $.jBox.close(n)
-                                }
+                        layer.confirm('请选择移动文件夹', {
+                            title:"请选择移动文件夹",
+                            content:"<div class='albums-cl-tree j-albumsNodes j-propagation'>"+n.html()+"</div>",
+                            yes:function(){
+                                var o = [];
+                                d.find("#j-panelImgs li.selected").each(function() {
+                                    o.push($(this).data("id"))
+                                });
+                                $.ajax({
+                                    url: l.moveImg + "?v=" + Math.round(100 * Math.random()),
+                                    type: "post",
+                                    dataType: "json",
+                                    data: { file_id: o, folder_id: s.moveFolderID },
+                                    success: function(o) {
+                                        if (1 == o.status) {
+                                            var i = $(".layui-layer").find(".selected").data("id");
+                                            console.log(i);
+                                            d.find("#j-panelImgs li.selected").fadeOut(300, function() { $(this).remove() }), UpdateSubTreeNums(), UpdateSubTreeNums(i), layer.msg("恭喜您，操作成功！")
+                                        } else layer.msg("对不起，移动失败：" + o.msg)
+                                    }
+                                })
                             }
-                        })
+                        });
                     }), g.click(P)
                 }
 
@@ -430,12 +439,16 @@ define(['jquery','underscore','layer','uploadify'],function($,_,layer){
                         }
                     })
                 });
-
+                //搜索文件
                 d.on("click", ".searchImg", function() {
                     var n = $(this).prev().val();
                     r(d, s.folderID, 1, n)
-                })
-
+                });
+                //分页跳转
+                d.on("click","#j-panelPaginate a",function(e){
+                    e.preventDefault();
+                    r(d, s.folderID,$(this).attr('href').split('page=')[1],$(".searchImg").prev().val());
+                });
             });
 
         }

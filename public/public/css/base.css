@@ -4822,3 +4822,27 @@ a.Jclose {
 .text-center{
     text-align: center;
 }
+.pagination li{
+    display: inline-block;
+}
+.pagination span{
+    display: inline-block;
+    margin-left: -1px;
+    padding: 0 12px;
+    height: 32px;
+    line-height: 32px;
+    color: #428bca;
+    border: 1px solid #ddd;
+    background: #fff;
+    vertical-align: middle;
+}
+.pagination .disabled span{
+    background-color: #e6e6e6!important;
+    color: #bbb!important;
+    cursor: no-drop;
+}
+.pagination .active span,.pagination a:hover{
+    background-color: #428bca;
+    color: #fff;
+    border-color: #428bca;
+}
